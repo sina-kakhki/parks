@@ -15,6 +15,7 @@ function ParkDetails () {
   const [view, setView] = useState('View Decription')
   const [park, setPark] = useState([])
   const [button, setButton] = useState(false)
+  const [imageIds, setImageIds] = useState()
 
   const { name, address, description, url, image, playGround, toilets, picnicSite, sportsField, tramp, dogWalking, approved } = park
   const rates = useSelector(globalState => globalState.comments)
@@ -40,6 +41,20 @@ function ParkDetails () {
       setView('Hide Description')
     )
   }
+
+  const loadImages = async () => {
+    try {
+      const res = await fetch('/api/images/images')
+      const data = await res.json()
+      console.log(data)
+      setImageIds(data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  useEffect(() => {
+    loadImages()
+  }, [])
 
   const parkRate = rates.reduce((accumulator, currentValue) => accumulator + currentValue.rating, 0) / rates.length
 

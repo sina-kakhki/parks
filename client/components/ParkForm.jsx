@@ -76,7 +76,7 @@ export default function ParkForm (props) {
   const uploadImage = async (base64EncodedImage) => {
     // console.log(base64EncodedImage)
     try {
-      await fetch('/api/upload', {
+      await fetch('/api/v1/images/upload', {
         method: 'POST',
         body: JSON.stringify({ data: base64EncodedImage }),
         headers: { 'Content-type': 'application/json' }

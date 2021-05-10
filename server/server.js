@@ -10,9 +10,8 @@ const imagesRoutes = require('./routes/images')
 
 const server = express()
 
-server.use(express.json())
-server.use(express.static(path.join(__dirname, 'public')))
 server.use(express.json({ limit: '50mb' }))
+server.use(express.static(path.join(__dirname, 'public')))
 server.use(express.urlencoded({ limit: '50mb', extended: true }))
 
 server.use('/api/v1/park', parkRoutes)
@@ -20,7 +19,7 @@ server.use('/api/v1/comments', commentRoutes)
 server.use('/api/v1/visit', toVisitRoutes)
 server.use('/api/v1/rating', ratingRoutes)
 server.use('/api/v1/fav', favParksRoutes)
-server.use('/api/', imagesRoutes)
+server.use('/api/v1/images', imagesRoutes)
 
 server.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'))
