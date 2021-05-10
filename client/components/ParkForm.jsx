@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { validate, rules } from './ValidationForm'
+import UploadImage from './UploadImage'
 
 export default function ParkForm (props) {
   const isAdmin = useSelector(globalState => globalState.user.isAdmin)
@@ -48,6 +49,39 @@ export default function ParkForm (props) {
       [name]: target.checked
     })
   }
+  const [fileInputState, setFileInputState] = useState('')
+  const [selectedFile, setSelectedFile] = useState('')
+  const [previewSource, setPreviewSource] = useState('')
+
+  function handleFileInputChange (e) {
+    const file = e.target.files[0]
+    previewFile(file)
+  }
+
+  const previewFile = (file) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onloadend = () => {
+      setPreviewSource(reader.result)
+    }
+  }
+  const handleSubmitFile = (e) => {
+    e.preventDefault()
+    if (!previewSource) return
+    uploadImage(previewSource)
+  }
+  const uploadImage = async (base64EncodedImage) => {
+    console.log(base64EncodedImage)
+    try {
+      await fetch('/api/upload', {
+        method: 'POST',
+        body: JSON.stringify({ data: base64EncodedImage }),
+        headers: { 'Content-type': 'application/json' }
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   // Submit
   function handleSubmit (e) {
@@ -62,7 +96,7 @@ export default function ParkForm (props) {
   }
 
   const { name, address, lat, lon, url, description, image, playground, toilets, picnicSite, sportsField, tramp, dogWalking, approved } = form
-
+  // Form
   return (
     <div className='md:flex md:justify-between mt-8 mx-14 items-start' >
       <div>
@@ -206,16 +240,15 @@ export default function ParkForm (props) {
                   className='block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4'
                 >Image</label>
               </div>
-              <div className= 'md:w-2/3'>
+              <div className='md:w-2/3'>
                 <input
-                  id='image'
+                  type='file'
                   name='image'
-                  className='bg-gray-200 border-2 border-green-300 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-green-500'
-                  placeholder= 'jpg,png,svg'
-                  type='text'
-                  value={image}
-                  onChange={handleChange}
+                  value={fileInputState}
+                  onChange={handleFileInputChange}
                 />
+                {/* <UploadImage id='image' name='image' value={image} placeholder= 'jpg,png,svg' onChange={handleFileInputChange}/> */}
+                <button className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline' type='submit' onClick= {handleSubmitFile}>Submit image</button>
               </div>
             </div>
             <div className='md:flex md:items-stretch mb-6'>
@@ -375,10 +408,8 @@ export default function ParkForm (props) {
               ? <p>{url}</p>
               : <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Website</p>
             }
-            {image
-              ? <p>{image}</p>
-              : <p className='bg-gray-200 md:w-1/3 py-2 px-4 w-full max-w-sm'>Image</p>
-            }
+            {previewSource && (<img src={previewSource} alt='chosen' style={{ height: '150px' }}/>)}
+
             <div className='flex'>
               {!!playground && <img className='mr-3' src='/icons/playground.png' alt="playground icon" width="35" height="35"/>}
               {!!toilets && <img className='mr-3' src='/icons/icon-toilets.svg' alt="toilet icon" width="35" height="35"/>}
@@ -393,31 +424,6 @@ export default function ParkForm (props) {
                 : <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Park Approved: No</p>
               }
             </div>}
-            {/* {playground
-              ? <img className='mr-3' src='/icons/playground.png' alt="playground icon" width="35" height="35"/>
-              : <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Playground: No</p>
-            }
-            {toilets
-              ? <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Toilets: Yes</p>
-              : <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Toilets: No</p>
-            }
-            {picnicSite
-              ? <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Picnic Site: Yes</p>
-              : <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Picnic Site: No</p>
-            }
-            {sportsField
-              ? <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Sports field: Yes</p>
-              : <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Sports field: No</p>
-            }
-            {tramp
-              ? <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Tramp/Bush walk: Yes</p>
-              : <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Tramp/Bush walk: No</p>
-            }
-            {dogWalking
-              ? <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Dog Walking Allowed: Yes</p>
-              : <p className='bg-gray-200 md:w-2/3 py-2 px-4 w-full max-w-sm'>Dog Walking allowed: No</p>
-            } */}
-
           </div>
         </div>
       </div>
