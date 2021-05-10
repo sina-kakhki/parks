@@ -1,55 +1,55 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { validate, rules } from "./ValidationForm";
-import ParkFormFacilityItem from "./ParkFormFacilityItem";
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { validate, rules } from './ValidationForm'
+import ParkFormFacilityItem from './ParkFormFacilityItem'
 
-export default function ParkForm(props) {
-  const isAdmin = useSelector((globalState) => globalState.user.isAdmin);
+export default function ParkForm (props) {
+  const isAdmin = useSelector((globalState) => globalState.user.isAdmin)
 
-  const [invalid, setInvalid] = useState({});
+  const [invalid, setInvalid] = useState({})
   const [form, setForm] = useState(
     props.formData || {
-      name: "",
-      address: "",
+      name: '',
+      address: '',
       lat: -36.858961086253935,
       lon: 174.77547498145518,
-      url: "",
-      description: "",
-      image: "",
+      url: '',
+      description: '',
+      image: '',
       playground: 0,
       toilets: 0,
       picnicSite: 0,
       sportsField: 0,
       tramp: 0,
       dogWalking: 0,
-      approved: 0,
+      approved: 0
     }
-  );
+  )
   // Validation for required fields
   const validationRules = {
     name: [rules.isRequired],
     address: [rules.isRequired],
     url: [rules.isRequired],
-    description: [rules.isRequired],
-  };
+    description: [rules.isRequired]
+  }
 
   // onChange for text inputs
-  function handleChange(e) {
-    const { name, value } = e.target;
+  function handleChange (e) {
+    const { name, value } = e.target
     setForm({
       ...form,
-      [name]: value,
-    });
+      [name]: value
+    })
   }
   // onChange for checkbox inputs
-  function handleInputChange(event) {
-    const target = event.target;
-    const name = target.name;
+  function handleInputChange (event) {
+    const target = event.target
+    const name = target.name
 
     setForm({
       ...form,
-      [name]: target.checked,
-    });
+      [name]: target.checked
+    })
   }
   const [fileInputState, setFileInputState] = useState('')
   const [selectedFile, setSelectedFile] = useState('')
@@ -67,18 +67,34 @@ export default function ParkForm(props) {
       setPreviewSource(reader.result)
     }
   }
+  const handleSubmitFile = (e) => {
+    e.preventDefault()
+    if (!previewSource) return
+    uploadImage(previewSource)
+  }
+
+  const uploadImage = async (base64EncodedImage) => {
+    // console.log(base64EncodedImage)
+    try {
+      await fetch('/api/upload', {
+        method: 'POST',
+        body: JSON.stringify({ data: base64EncodedImage }),
+        headers: { 'Content-type': 'application/json' }
+      })
+    } catch (error) {
+      console.error('uploadImage error:', error)
     }
   }
 
   // Submit
-  function handleSubmit(e) {
-    const results = validate(form, validationRules, invalid);
-    e.preventDefault();
+  function handleSubmit (e) {
+    const results = validate(form, validationRules, invalid)
+    e.preventDefault()
 
     if (results.isValid) {
-      props.submitPark(form);
+      props.submitPark(form)
     } else {
-      setInvalid(results.details);
+      setInvalid(results.details)
     }
   }
 
@@ -96,8 +112,8 @@ export default function ParkForm(props) {
     sportsField,
     tramp,
     dogWalking,
-    approved,
-  } = form;
+    approved
+  } = form
 
   return (
     <div className='flex flex-col mt-8 mx-14'>
@@ -190,49 +206,54 @@ export default function ParkForm(props) {
             Image
           </label>
           <input
-            id='image'
+            type='file'
             name='image'
+            placeholder='jpg or png'
+            value={fileInputState}
             className='bg-gray-200 border-2 rounded w-full py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500 mb-4'
-            placeholder='jpg,png,svg'
-            type='text'
-            value={image}
-            onChange={handleChange}
+            onChange={handleFileInputChange}
           />
+          {previewSource && (<img src={previewSource} alt='chosen' style={{ height: '150px' }}/>)}
+          <button
+            className='bg-gray-400 hover:bg-green-700 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline'
+            type='submit' onClick= {handleSubmitFile}>
+            Submit image
+          </button>
         </div>
         <div>
           <ParkFormFacilityItem
-            facilityName={"Playground"}
-            facilityValue={"playground"}
+            facilityName={'Playground'}
+            facilityValue={'playground'}
             checkValue={playground}
             onChangeFunc={handleInputChange}
           />
           <ParkFormFacilityItem
-            facilityName={"Toilets"}
-            facilityValue={"toilets"}
+            facilityName={'Toilets'}
+            facilityValue={'toilets'}
             checkValue={toilets}
             onChangeFunc={handleInputChange}
           />
           <ParkFormFacilityItem
-            facilityName={"Picnic Site"}
-            facilityValue={"picnicSite"}
+            facilityName={'Picnic Site'}
+            facilityValue={'picnicSite'}
             checkValue={picnicSite}
             onChangeFunc={handleInputChange}
           />
           <ParkFormFacilityItem
-            facilityName={"Sports Field"}
-            facilityValue={"sportsField"}
+            facilityName={'Sports Field'}
+            facilityValue={'sportsField'}
             checkValue={sportsField}
             onChangeFunc={handleInputChange}
           />
           <ParkFormFacilityItem
-            facilityName={"Tramping"}
-            facilityValue={"tramp"}
+            facilityName={'Tramping'}
+            facilityValue={'tramp'}
             checkValue={tramp}
             onChangeFunc={handleInputChange}
           />
           <ParkFormFacilityItem
-            facilityName={"Dog Walking Allowed"}
-            facilityValue={"dogWalking"}
+            facilityName={'Dog Walking Allowed'}
+            facilityValue={'dogWalking'}
             checkValue={dogWalking}
             onChangeFunc={handleInputChange}
           />
@@ -306,5 +327,5 @@ export default function ParkForm(props) {
         </div>
       </div> */}
     </div>
-  );
+  )
 }
