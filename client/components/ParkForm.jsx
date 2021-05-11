@@ -51,12 +51,15 @@ export default function ParkForm (props) {
       [name]: target.checked
     })
   }
-  const [fileInputState, setFileInputState] = useState('')
-  const [selectedFile, setSelectedFile] = useState('')
+  // const [fileInputState, setFileInputState] = useState('')
+  // const [selectedFile, setSelectedFile] = useState('')
   const [previewSource, setPreviewSource] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
 
   function handleFileInputChange (e) {
     const file = e.target.files[0]
+    console.log(file.name)
+    // setFileInputState(file.name)
     previewFile(file)
   }
 
@@ -76,11 +79,13 @@ export default function ParkForm (props) {
   const uploadImage = async (base64EncodedImage) => {
     // console.log(base64EncodedImage)
     try {
-      await fetch('/api/v1/images/upload', {
+      const response = await fetch('/api/v1/images/upload', {
         method: 'POST',
         body: JSON.stringify({ data: base64EncodedImage }),
         headers: { 'Content-type': 'application/json' }
       })
+      const json = await response.json()
+      setImageUrl(json.url)
     } catch (error) {
       console.error('uploadImage error:', error)
     }
@@ -89,6 +94,7 @@ export default function ParkForm (props) {
   // Submit
   function handleSubmit (e) {
     const results = validate(form, validationRules, invalid)
+    results.image = imageUrl
     e.preventDefault()
 
     if (results.isValid) {
@@ -105,7 +111,6 @@ export default function ParkForm (props) {
     lon,
     url,
     description,
-    image,
     playground,
     toilets,
     picnicSite,
@@ -209,7 +214,7 @@ export default function ParkForm (props) {
             type='file'
             name='image'
             placeholder='jpg or png'
-            value={fileInputState}
+            value=''
             className='bg-gray-200 border-2 rounded w-full py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-green-500 mb-4'
             onChange={handleFileInputChange}
           />

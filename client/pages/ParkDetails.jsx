@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { Image } from 'cloudinary-react'
 
 import Header from '../components/Header'
 import Facilities from '../components/Facilities'
@@ -44,7 +45,7 @@ function ParkDetails () {
 
   const loadImages = async () => {
     try {
-      const res = await fetch('/api/images/images')
+      const res = await fetch('/api/v1/images/images')
       const data = await res.json()
       console.log(data)
       setImageIds(data)
@@ -79,7 +80,19 @@ function ParkDetails () {
             <Facilities playground={playGround} toilets={toilets} picnicSite={picnicSite} sportsField={sportsField} tramp={tramp} dogWalking={dogWalking} url={url} />
           </div>
           <div className='mb-4 lg:mb-0 lg:w-1/2'>
-            <img src={image} alt="park image" width="100%" height="600" />
+            {console.log(imageIds)}
+            {imageIds &&
+                    imageIds.map((imageId, index) => (
+                      <Image
+                        key={index}
+                        cloudName={'dvsikj1gh'}
+                        publicId={imageId}
+                        width="300"
+                        crop="scale"
+                      />
+                    ))}
+
+            {/* <img src={Image} alt="park image" width="100%" height="600" /> */}
           </div>
         </div>
         <Comments parkId={id} />
