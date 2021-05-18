@@ -1,26 +1,25 @@
 # Parks
 
 > Explore and find your new favorite parks
- 
-### From the Github UI
-See the instructions [here](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) to use Github's feature to create a new repo from a template.
+
 
 ### From the command line
 
-```
+```bash
 npm install # to install dependencies
+npm run knex migrate:latest # to reset database
+npm run knex seed:run # to get seed data
+npm run tailbuild # to build tailwind
 npm run dev # to start the dev server
 ```
 
 You can find the server running on [http://localhost:3000](http://localhost:3000).
 
-## CSS
-Tailwind.css has been added to the project.
-Please refer to the documenation: https://tailwindcss.com/docs
 
-## User stories (from highest priority)
+
+## User Stories (from highest priority)
 1. As a member, I want to view a map of parks
-    - Park home page displays a map with clickable parks which will lead to park details page
+    - Main page displays a map with clickable parks which will lead to park details page
 2. As a member, I want to view a park details page
     - Park Details will display information as well as a rating, comments, photos
 3. As a member, I want to rate a park
@@ -30,30 +29,49 @@ Please refer to the documenation: https://tailwindcss.com/docs
 5. As a member, I want to see a "history" of visited parks and parks to visited
     - From the user's personal profile page, they can view lists of their visited/to visit parks
 6. As a member, I want to be able to filter the map of parks
-    - From the park home page, the member can use drop down lists to filter for parks that meets their requirements
+    - From the main page, the member can select filters for parks that meets their requirements
 7. As a member, I want to suggest a park to be added
-    - From the park home page (when logged in), the member can open a page which has a form to add a park
+    - From the main page (when logged in), the member can open a page which has a form to add a park
 8. As an admin, I want to be able to moderate and verify user park suggestions
     - From an admin page, the admin should see a list of user suggestions and select to accept or decline the new page
 
 
-## User interface (proposal)
 
-![Homepage](docs/home.png)
-![MapPage](docs/mapPage.png)
-![ParkDetails](docs/parkDetails.png)
+## User interface
 
-## API routes (proposal)
+Landing Page|Main Page
+------------------------------------|------------------------------
+![Landingpage](docs/landingPage.png)|![MainPage](docs/mainPage.png)
+
+Park Details Page|Admin Page
+------------------------------------|------------------------------
+![ParkDetails](docs/parkDetailsPage.png)|![AdminPage](docs/adminPage.png)
+
+Add Park Page|About Page
+------------------------------------|-------------------------------
+![AboutPage](docs/addPark.png)|![AddParkPage](docs/aboutPage.png)
+
+
 
 
 ## Details
 
-This repo includes:
+## Tech Stack
+**Client:** React, Redux, TailwindCSS
 
-* a single, simple API endpoint (`/api/v1/fruits`)
-* a single React component (`<App />`)
-* an example database module (`server/db/fruits.js`)
-* an API client module (`client/apis/fruits.js`)
-* configuration for Jest and testing library
-* configuration for server-side debugging in VS Code
-* a single client-side test (`client/components/App.test.js`)
+**Server:** Node, Express
+
+**Auth:** Auth0
+
+
+
+## Authors
+- Sarah Smith - [@sarah-smith-nz](https://github.com/sarah-smith-nz)
+
+- Sina Kakhki - [@sina-kakhki](https://github.com/sina-kakhki)
+
+- Jonathan Zhou - [@jonathan-zhou](https://github.com/jonathan-zhou)
+
+- Johann Besas - [@johannbesas](https://github.com/johannbesas)
+
+- Lory Costa - [@lory-costa](https://github.com/lory-costa)
