@@ -63,6 +63,8 @@ Add Park Page|About Page
 
 **Auth:** Auth0
 
+**Images Database:** Cloudinary
+
 
 
 ## Authors
