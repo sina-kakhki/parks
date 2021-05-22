@@ -59,9 +59,13 @@ Add Park Page|About Page
 ## Tech Stack
 **Client:** React, Redux, TailwindCSS
 
-**Server:** Node, Express
+**Server:** Node, Express, Knex
 
 **Auth:** Auth0
+
+**Images Database:** Cloudinary
+
+**Testing:** Playwright, Jest
 
 
 
