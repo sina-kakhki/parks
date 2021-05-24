@@ -1,8 +1,8 @@
 exports.up = function (knex) {
   return knex.schema.createTable('toVisit', table => {
     table.increments('id')
-    table.int('user_id')
-    table.int('park_id')
+    table.integer('user_id')
+    table.integer('park_id')
   })
 }
 
